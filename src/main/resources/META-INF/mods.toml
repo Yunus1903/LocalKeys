@@ -1,25 +1,25 @@
 modLoader="javafml"
 loaderVersion="[${loader_version},)"
-issueTrackerURL="https://github.com/Yunus1903/TemplateMod/issues"
+issueTrackerURL="https://github.com/Yunus1903/LocalKeys/issues"
 
 [[mods]]
-    modId="templatemod"
+    modId="localkeys"
     version="${version}"
-    displayName="TemplateMod"
-    displayURL=""
-    logoFile=""
+    displayName="LocalKeys"
+    displayURL="https://www.curseforge.com/minecraft/mc-mods/localkeys"
+    logoFile="localkeys.png"
 
     authors="Yunus1903"
     credits=""
-    description=""
+    description="A way to localize your keybindings"
 
-[[dependencies.templatemod]]
+[[dependencies.localkeys]]
     modId="minecraft"
     mandatory=true
     versionRange="[${minecraft_version}]"
     ordering="NONE"
     side="BOTH"
-[[dependencies.templatemod]]
+[[dependencies.localkeys]]
     modId="forge"
     mandatory=true
     versionRange="[${forge_version},)"

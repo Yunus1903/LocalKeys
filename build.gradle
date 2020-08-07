@@ -41,13 +41,13 @@ minecraft {
             workingDirectory project.file('run')
 
             if (findProject(':Workspace') != null) {
-                ideaModule '1.16.TemplateMod.main'
+                ideaModule '1.16.LocalKeys.main'
             }
 
-            args '--mod', 'templatemod', '--all', '--output', file('src/main/generated/resources/'), '--existing', file('src/main/resources')
+            args '--mod', 'localkeys', '--all', '--output', file('src/main/generated/resources/'), '--existing', file('src/main/resources')
 
             mods {
-                templatemod {
+                localkeys {
                     source sourceSets.main
                 }
             }
