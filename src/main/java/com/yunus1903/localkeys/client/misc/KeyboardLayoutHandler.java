@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
+ * This class handles all the layout changes
  * @author Yunus1903
  * @since 07/08/2020
  */
@@ -27,15 +28,21 @@ public class KeyboardLayoutHandler
     private static final String PATH = "keyboard_layouts";
     private static final String SAVE_PATH = "keyboard_layout.txt";
 
+    private final Minecraft mc;
     private final File saveFile;
     private final List<JsonObject> jsons = new ArrayList<>();
     private final List<KeyboardLayout> layouts = new ArrayList<>();
 
     public KeyboardLayout currentLayout;
 
-    public KeyboardLayoutHandler()
+    /**
+     * Constructor for the {@link KeyboardLayoutHandler handler} instance
+     * @param mc A instance of {@link Minecraft}
+     */
+    public KeyboardLayoutHandler(Minecraft mc)
     {
-        saveFile = new File(Minecraft.getInstance().gameDir, SAVE_PATH);
+        this.mc = mc;
+        saveFile = new File(mc.gameDir, SAVE_PATH);
 
         try
         {
@@ -50,9 +57,13 @@ public class KeyboardLayoutHandler
         loadCurrentLayout();
     }
 
+    /**
+     * Reads {@link JsonObject JSON objects} from the {@code .json} files in the game's resources and stores them into {@link KeyboardLayoutHandler#jsons}
+     * @throws IOException
+     */
     private void readJsons() throws IOException
     {
-        IResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+        IResourceManager resourceManager = mc.getResourceManager();
         for (ResourceLocation rl : resourceManager.getAllResourceLocations(PATH, filter -> filter.endsWith(".json")))
         {
             IResource resource = resourceManager.getResource(rl);
@@ -60,6 +71,9 @@ public class KeyboardLayoutHandler
         }
     }
 
+    /**
+     * Parses the {@link KeyboardLayoutHandler#jsons JSON objects} in {@link KeyboardLayoutHandler#jsons} into {@link KeyboardLayoutHandler#layouts keyboard layouts}
+     */
     private void parseLayouts()
     {
         for (JsonObject json : jsons)
@@ -79,11 +93,17 @@ public class KeyboardLayoutHandler
         });
     }
 
+    /**
+     * @return The a list of loaded {@link KeyboardLayout layouts}
+     */
     public List<KeyboardLayout> getLayouts()
     {
         return Collections.unmodifiableList(layouts);
     }
 
+    /**
+     * Loads the {@link KeyboardLayoutHandler#currentLayout current layout} from a local {@link KeyboardLayoutHandler#SAVE_PATH file}
+     */
     private void loadCurrentLayout()
     {
         currentLayout = layouts.get(0);
@@ -109,9 +129,13 @@ public class KeyboardLayoutHandler
         }
     }
 
+    /**
+     * Remaps the in-game {@link KeyBinding KeyBindings} according to the layout
+     * @param layout The {@link KeyboardLayout layout} to which the game {@link KeyBinding bindings} should be mapped to
+     */
     public void remapKeys(KeyboardLayout layout)
     {
-        GameSettings gameSettings = Minecraft.getInstance().gameSettings;
+        GameSettings gameSettings = mc.gameSettings;
         for (KeyBinding key : gameSettings.keyBindings)
         {
             if (key.getKey().getType() == InputMappings.Type.KEYSYM)
@@ -133,6 +157,9 @@ public class KeyboardLayoutHandler
         saveCurrentLayout();
     }
 
+    /**
+     * Saves the {@link KeyboardLayoutHandler#currentLayout current layout} to a local {@link KeyboardLayoutHandler#SAVE_PATH file}
+     */
     private void saveCurrentLayout()
     {
         try (PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(saveFile), StandardCharsets.UTF_8)))
@@ -145,11 +172,22 @@ public class KeyboardLayoutHandler
         }
     }
 
+    /**
+     * Maps the provided key code according to the provided {@link KeyboardLayout layout}
+     * @param layout The {@link KeyboardLayout layout} to map to
+     * @param key The GLFW key code of the key
+     * @return A {@link Optional optional} with the mapped key code
+     */
     private Optional<Integer> getMappedKey(KeyboardLayout layout, int key)
     {
         return Optional.ofNullable(layout.getMapping().get(getDefaultKey(key).orElse(layouts.get(0).getMapping().get(key))));
     }
 
+    /**
+     * Gets the original unmapped key code of the provided mapped key code
+     * @param key The GLFW key code of the key
+     * @return A {@link Optional optional} with the key code of the default mapping of this key
+     */
     private Optional<Integer> getDefaultKey(int key)
     {
         Map<Integer, Integer> map = currentLayout.getReverseMappings();
