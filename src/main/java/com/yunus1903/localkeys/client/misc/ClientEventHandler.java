@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.List;
 
 /**
+ * Client-side only event handler class
  * @author Yunus1903
  * @since 07/08/2020
  */

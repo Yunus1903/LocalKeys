@@ -15,6 +15,7 @@ import java.util.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
+ * Mod {@link DataGenerator datagenerator} {@link net.minecraft.data.IDataProvider provider} for {@link com.yunus1903.localkeys.client.misc.KeyboardLayout keyboard layout} mappings
  * @author Yunus1903
  * @since 07/08/2020
  */
